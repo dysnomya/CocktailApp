@@ -1,11 +1,11 @@
 package com.example.cocktailapp
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,7 +28,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -52,15 +50,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.Navigator
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cocktailapp.ui.theme.CocktailAppTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -183,7 +179,6 @@ fun CocktailList(onItemClick: (Cocktail) -> Unit) {
 
 @Composable
 fun CocktailDetail(cocktail: Cocktail) {
-    val text = cocktail.name
     Card {
         Column (
             Modifier
@@ -191,16 +186,43 @@ fun CocktailDetail(cocktail: Cocktail) {
                 .padding(16.dp)
                 .background(MaterialTheme.colorScheme.surfaceContainer)
         ) {
+            Spacer(Modifier.size(36.dp))
+
             Text(
-                text = "Details page for $text",
-                fontSize = 24.sp
+                text = cocktail.name,
+                fontSize = 24.sp,
             )
             Spacer(Modifier.size(16.dp))
+
+            CocktailImage(cocktail)
+
+            val timerViewModel: TimerViewModel = viewModel()
+
+            TimerScreenContent(timerViewModel)
+
             Text(
                 text = "TODO: Add great details here"
             )
         }
     }
+}
+
+
+@Composable
+fun CocktailImage(cocktail: Cocktail, modifier: Modifier = Modifier) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(cocktail.imageUrl)
+            .crossfade(true)
+            .build(),
+        placeholder = painterResource(R.drawable.cocktail_placeholder),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .aspectRatio(1f)
+            .padding(4.dp)
+            .clip(RoundedCornerShape(topEnd = 6.dp, topStart = 6.dp))
+    )
 }
 
 @Composable
@@ -211,20 +233,8 @@ fun CocktailListCardContent(cocktail: Cocktail, modifier: Modifier = Modifier) {
             .padding(4.dp)
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(cocktail.imageUrl)
-                .crossfade(true)
-                .build(),
-            placeholder = painterResource(R.drawable.cocktail_placeholder),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .aspectRatio(1f)
-                .padding(4.dp)
-                .clip(RoundedCornerShape(topEnd = 6.dp, topStart = 6.dp))
-        )
+        CocktailImage(cocktail, modifier = Modifier.fillMaxSize())
+
         Text(
             text = cocktail.name,
             textAlign = TextAlign.Center,
@@ -283,4 +293,12 @@ fun GreetingPreview() {
     CocktailAppTheme {
         AppScreen()
     }
+}
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true)
+@Composable
+fun CardPreview() {
+    CocktailDetail(Cocktail("Kioki Coffee", "https://www.thecocktaildb.com/images/media/drink/uppqty1441247374.jpg"))
 }

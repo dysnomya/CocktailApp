@@ -1,4 +1,4 @@
-package com.example.cocktailapp
+package com.example.cocktailapp.ui.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,10 +16,11 @@ class TimerViewModel : ViewModel() {
 
     fun startTimer() {
         timerJob?.cancel()
+
         timerJob = viewModelScope.launch {
-            while (true) {
+            while (_timer.value > 0) {
                 delay(1000)
-                _timer.value++
+                _timer.value--
             }
         }
     }
@@ -31,6 +32,10 @@ class TimerViewModel : ViewModel() {
     fun stopTimer() {
         _timer.value = 0
         timerJob?.cancel()
+    }
+
+    fun setTimerValue(seconds: Long) {
+        _timer.value = seconds
     }
 
     override fun onCleared() {

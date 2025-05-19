@@ -111,22 +111,6 @@ fun AppScreen() {
 
 
 
-@Composable
-fun CocktailImage(cocktail: Cocktail, modifier: Modifier = Modifier) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(cocktail.imageUrl)
-            .crossfade(true)
-            .build(),
-        placeholder = painterResource(R.drawable.cocktail_placeholder),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = modifier
-            .aspectRatio(1f)
-            .padding(4.dp)
-            .clip(RoundedCornerShape(topEnd = 6.dp, topStart = 6.dp))
-    )
-}
 
 
 

@@ -15,12 +15,12 @@
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\dysnomya\.android\avd\Medium_Tablet.avd" />
+                <DeviceId pluginId="PhysicalDevice" identifier="serial=LNMVYXO7CMEQCET8" />
               </handle>
             </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="PhysicalDevice" identifier="serial=LNMVYXO7CMEQCET8" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\dysnomya\.android\avd\Medium_Tablet.avd" />
               </handle>
             </Target>
           </targets>

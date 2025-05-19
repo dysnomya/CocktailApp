@@ -15,13 +15,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        val windowInsetsController =
-            WindowCompat.getInsetsController(window, window.decorView)
-
-        windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
-        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
+        
         setContent {
             CocktailAppTheme {
                 AppScreen()

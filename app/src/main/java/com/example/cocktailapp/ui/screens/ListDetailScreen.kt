@@ -27,24 +27,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.cocktailapp.api.CocktailViewModel
-import com.example.cocktailapp.api.RetrofitClient
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.ui.theme.backgroundColorsBrush
-import com.example.cocktailapp.ui.theme.rainbowColorsBrush
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -82,13 +78,12 @@ fun CocktailListDetail(navigator: ThreePaneScaffoldNavigator<Cocktail>,
             AnimatedPane {
                 navigator.currentDestination?.contentKey?.let {
 
-
                     CocktailDetail(it, navigator, scope)
                 }
             }
         },
         modifier = modifier
-            .background(backgroundColorsBrush)
+            .background(MaterialTheme.colorScheme.background)
     )
 }
 
@@ -139,7 +134,7 @@ fun CocktailList(cocktails: List<Cocktail>, onItemClick: (Cocktail) -> Unit) {
                         onItemClick(cocktail)
                     }
                     .border(
-                        BorderStroke(4.dp, rainbowColorsBrush),
+                        BorderStroke(4.dp, backgroundColorsBrush),
                         MaterialTheme.shapes.medium
                     )
             ) {
@@ -152,9 +147,13 @@ fun CocktailList(cocktails: List<Cocktail>, onItemClick: (Cocktail) -> Unit) {
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun CocktailDetail(cocktail: Cocktail, navigator: ThreePaneScaffoldNavigator<Cocktail>, scope: CoroutineScope) {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+
     Scaffold (
         topBar = {
-            TopBar(navigator, scope)
+            if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+                TopBar(navigator, scope)
+            }
         }
     ) { innerPadding -> Column (
             Modifier
@@ -172,9 +171,24 @@ fun CocktailDetail(cocktail: Cocktail, navigator: ThreePaneScaffoldNavigator<Coc
             )
 
 
-        cocktail.instructions?.let { Text(text = it) }
+            DetailsWindow(label = "Instructions") {
+                Text(cocktail.instructions.toString())
+            }
+
+
 
         }
+    }
+}
+
+@Composable
+fun DetailsWindow(label: String, content: @Composable () -> Unit) {
+    OutlinedCard {
+        Text(label)
+
+        Spacer(Modifier.size(16.dp))
+
+        content
     }
 }
 
@@ -184,7 +198,7 @@ fun CocktailListCardContent(cocktail: Cocktail, modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .padding(4.dp)
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         CocktailImage(cocktail, modifier = Modifier.fillMaxSize())
 

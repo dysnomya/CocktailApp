@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.converter.jackson)
     implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     implementation(libs.androidx.graphics.shapes.v110alpha01)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

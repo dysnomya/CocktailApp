@@ -1,5 +1,6 @@
 package com.example.cocktailapp.ui.screens
 
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -14,11 +15,10 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -51,8 +51,22 @@ fun AppScreen() {
     val alcoholicViewModel: AlcoholicViewModel = viewModel()
     val alcoholic: List<Cocktail> = alcoholicViewModel.cocktailList.value
 
+    val context = LocalContext.current
+
     val nonAlcoholicViewModel: NonAlcoholicViewModel = viewModel()
     val nonAlcoholic: List<Cocktail> = nonAlcoholicViewModel.cocktailList.value
+
+    val toastMessage by alcoholicViewModel.toastMessage.observeAsState()
+    val toastMessage2 by nonAlcoholicViewModel.toastMessage.observeAsState()
+
+
+    toastMessage?.let {
+        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+    }
+
+    toastMessage2?.let {
+        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+    }
 
     val drinksNavigator = rememberListDetailPaneScaffoldNavigator<Cocktail>()
     val nonAlcoholicNavigator = rememberListDetailPaneScaffoldNavigator<Cocktail>()
@@ -85,7 +99,7 @@ fun AppScreen() {
             }
         },
 
-    ) {
+        ) {
         NavHost(
             navController = navController,
             startDestination = AppDestinations.DRINKS.route,
@@ -95,7 +109,7 @@ fun AppScreen() {
             popExitTransition = { ExitTransition.None },
 
 
-        ) {
+            ) {
             composable(AppDestinations.DRINKS.route) { CocktailListDetail(
                 navigator = drinksNavigator,
                 scope = scope,

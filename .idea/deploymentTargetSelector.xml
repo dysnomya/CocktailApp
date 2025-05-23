@@ -3,7 +3,7 @@
   <component name="deploymentTargetSelector">
     <selectionStates>
       <SelectionState runConfigName="app">
-        <option name="selectionMode" value="DIALOG" />
+        <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2025-05-18T19:34:32.006723600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
@@ -15,12 +15,12 @@
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="PhysicalDevice" identifier="serial=LNMVYXO7CMEQCET8" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\dysnomya\.android\avd\Medium_Tablet.avd" />
               </handle>
             </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\dysnomya\.android\avd\Medium_Tablet.avd" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\dysnomya\.android\avd\Pixel_6a.avd" />
               </handle>
             </Target>
           </targets>
